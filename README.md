@@ -1,4 +1,4 @@
-# 2DHarmonicOscillator
+# 2D Harmonic Oscillator
 
 Well yeah, title expains it ...
 
