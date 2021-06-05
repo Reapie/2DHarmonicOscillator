@@ -35,7 +35,6 @@ def spring():
     kv.normalize()  # scale to length of 1
     
     d = spring_length - spring_default_length
-    print(spring_length)
     kv *= (k * d) / m
 
     v += kv
