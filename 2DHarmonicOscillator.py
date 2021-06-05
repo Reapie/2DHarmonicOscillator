@@ -31,11 +31,12 @@ m = 5   # mass in kg
 def spring():
     global v
     kv = center - pos   # get direction of center relative to object
+    spring_length = math.hypot(kv.x, kv.y)
     kv.normalize()  # scale to length of 1
     
-    spring_length = math.hypot(kv.x, kv.y)
     d = spring_length - spring_default_length
-    kv *= -(k * d) / m
+    print(spring_length)
+    kv *= (k * d) / m
 
     v += kv
 
