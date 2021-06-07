@@ -6,4 +6,6 @@ Made this for a physics assignment
 
 ## Hold Mousebutton to grab it
 
-## Togge pause with Space
+## Toggle pause with Space
+
+## Red Circle represents the default length of the spring
