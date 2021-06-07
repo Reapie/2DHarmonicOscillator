@@ -4,10 +4,11 @@ from vectormath import Vector2
 import math
 
 FPS = 60
-size = (width, height) = (1920, 1080)
+size = (width, height) = (512, 512)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (64, 64, 255)
+RED = (200, 64, 64)
 
 paused = False
 grabbed = False
@@ -20,16 +21,28 @@ center = Vector2(width / 2, height / 2)
 paint_area = pygame.display.set_mode(size)
 trace_area = pygame.surface.Surface(size)
 clock = pygame.time.Clock()
-pos = Vector2(int(width / 2), int(height / 4))
+
+def adjust_for_framerate(value):    # instead of once per frame once per second
+    return value / FPS
 
 trajectory = []
 
 # --- Physical Units --- 
-v = Vector2(60, 0)   # initial speed in pixel per second
+pos = Vector2(center[0], int(height / 6))  # starting position
 k = 2    # spring constant in newton / pixel
 v_loss = 0  # velocity loss per second in %
-spring_default_length = (height / 4)
+spring_default_length = int(height / 5)
 m = 10   # mass in kg
+
+# for starting velocity
+kv = center - pos
+spring_length = math.hypot(kv.x, kv.y)
+kv.normalize()
+d = spring_length - spring_default_length
+kv *= (k * d) / m
+
+v = Vector2(kv.y / 2, 0)   # initial speed in pixel per second
+v *= FPS
 # --- --- --- --- --- 
 
 def spring():
@@ -53,15 +66,13 @@ def move():
 def draw():
     # Draw trajectory
     for i in range(len(trajectory) - 1):
-        pygame.draw.aaline(paint_area, BLUE, trajectory[i], trajectory[i + 1])
+        pygame.draw.aaline(paint_area, BLUE, trajectory[i], trajectory[i + 1], 1)
+    # draw default spring length
+    pygame.draw.circle(paint_area, RED, (int(center.x), int(center.y)), int(spring_default_length), 1)
     # draw line from middle to object
-    pygame.draw.aaline(paint_area, WHITE, center, pos)
+    pygame.draw.aaline(paint_area, WHITE, (int(center.x), int(center.y)), pos)
     # Draw actual object
-    pygame.draw.circle(paint_area, BLUE, pos, 15, 15)
-        
-
-def adjust_for_framerate(value):    # instead of once per frame once per second
-    return value / FPS
+    pygame.draw.circle(paint_area, BLUE, (int(pos.x), int(pos.y)), 15, 15)       
 
 def main():
     global pos, grabbed, paused, last_pos, v
@@ -87,8 +98,8 @@ def main():
         
         # actual movement
         if not grabbed and not paused:
-            spring()
             move()
+            spring()
         elif grabbed:
             last_pos = pos.copy()
             pos = Vector2(pygame.mouse.get_pos())
