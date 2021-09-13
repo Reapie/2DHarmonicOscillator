@@ -4,7 +4,7 @@ from vectormath import Vector2
 import math
 
 FPS = 60
-size = (width, height) =(512, 512)
+size = (width, height) = (512, 512)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (64, 64, 255)
