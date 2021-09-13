@@ -4,7 +4,7 @@ from vectormath import Vector2
 import math
 
 FPS = 60
-size = (width, height) = (512, 512)
+size = (width, height) =(512, 512)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (64, 64, 255)
@@ -19,6 +19,7 @@ pygame.init()
 pygame.display.set_caption("2D Harmonic Oscillator")
 center = Vector2(width / 2, height / 2)
 paint_area = pygame.display.set_mode(size)
+
 trace_area = pygame.surface.Surface(size)
 clock = pygame.time.Clock()
 
@@ -28,7 +29,7 @@ def adjust_for_framerate(value):    # instead of once per frame once per second
 trajectory = []
 
 # --- Physical Units --- 
-pos = Vector2(center[0], int(height / 6))  # starting position
+pos = Vector2(center[0], int(height / 5))  # starting position
 k = 2    # spring constant in newton / pixel
 v_loss = 0  # velocity loss per second in %
 spring_default_length = int(height / 5)
@@ -36,8 +37,8 @@ m = 10   # mass in kg
 
 # for starting velocity
 kv = center - pos
-spring_length = math.hypot(kv.x, kv.y)
-kv.normalize()
+spring_length = math.hypot(kv.x, kv.y)  
+kv.normalize()                         
 d = spring_length - spring_default_length
 kv *= (k * d) / m
 
@@ -47,12 +48,12 @@ v *= FPS
 
 def spring():
     global v
-    kv = center - pos   # get direction of center relative to object
-    spring_length = math.hypot(kv.x, kv.y)
+    kv = pos - center   # get direction of center relative to object
+    spring_length = math.hypot(kv.x, kv.y)  # sqrt of arg1 * arg1 + arg2 * arg2
     kv.normalize()  # scale to length of 1
     
     d = spring_length - spring_default_length
-    kv *= (k * d) / m
+    kv *= -(k * d) / m
 
     v += kv
 
@@ -66,7 +67,7 @@ def move():
 def draw():
     # Draw trajectory
     for i in range(len(trajectory) - 1):
-        pygame.draw.aaline(paint_area, BLUE, trajectory[i], trajectory[i + 1], 1)
+        pygame.draw.aaline(paint_area, WHITE, trajectory[i], trajectory[i + 1], 1)
     # draw default spring length
     pygame.draw.circle(paint_area, RED, (int(center.x), int(center.y)), int(spring_default_length), 1)
     # draw line from middle to object
